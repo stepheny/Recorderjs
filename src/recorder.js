@@ -26,6 +26,7 @@ var root = (typeof self === 'object' && self.self === self && self) || (typeof g
     this.config.encoderSampleRate = config.encoderSampleRate || 48000;
     this.config.encoderPath = config.encoderPath || 'encoderWorker.min.js';
     this.config.streamPages = config.streamPages || false;
+    this.config.rawPacket = config.rawPacket || false;
     this.config.leaveStreamOpen = config.leaveStreamOpen || false;
     this.config.maxBuffersPerPage = config.maxBuffersPerPage || 40;
     this.config.encoderApplication = config.encoderApplication || 2049;
@@ -148,7 +149,13 @@ var root = (typeof self === 'object' && self.self === self && self) || (typeof g
       var that = this;
       this.encoder = new global.Worker( this.config.encoderPath );
 
-      if (this.config.streamPages){
+      if (this.config.rawPacket){
+        this.encoder.addEventListener( "message", function ( e ) {
+          that.streamPage( e.data );
+        });
+      }
+
+      else if (this.config.streamPages){
         this.encoder.addEventListener( "message", function( e ) {
           that.streamPage( e.data );
         });
