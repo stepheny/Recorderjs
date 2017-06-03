@@ -102,7 +102,7 @@ var root = (typeof self === 'object' && self.self === self && self) || (typeof g
   OggOpusEncoder.prototype.encodeFinalFrame = function() {
     var finalFrameBuffers = [];
     for ( var i = 0; i < this.numberOfChannels; ++i ) {
-      finalFrameBuffers.push( new Float32Array( this.bufferLength - (this.resampleBufferIndex / this.numberOfChannels) ));
+      finalFrameBuffers.push( new Float32Array( (this.resampleBufferLength - this.resampleBufferIndex) / this.numberOfChannels ));
     }
     this.encode( finalFrameBuffers );
     this.headerType += 4;
